@@ -200,7 +200,6 @@ bool VerificationCollision(int heroLigne, int heroColonne, const std::vector<Enn
 
 void TraiterGameOver() {
     std::cout << "\n           GAME OVER           \n";
-    std::cout << "   Va dormir sah c'est mieux pour toi \n\n";
 
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
