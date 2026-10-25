@@ -33,7 +33,6 @@ struct Ennemi {
     Position pos;
 };
 
-// Structure représentant un niveau complet 
 struct Level {
     int grille[10][20]{};
     Position heroStart{};
@@ -41,11 +40,9 @@ struct Level {
     std::vector<Ennemi> ennemis;
 };
 
-// Fonction pour initialiser et charger tous les niveaux hardcodés
 std::vector<Level> ChargerNiveaux(const Map& config) {
     std::vector<Level> niveaux;
 
-    // --- NIVEAU 1 ---
     Level lvl1;
     lvl1.heroStart = { 4, 0 };
     lvl1.exitPos = { 9, 19 };
@@ -62,13 +59,13 @@ std::vector<Level> ChargerNiveaux(const Map& config) {
             lvl1.grille[Ligne][Colonne] = config.ground;
         }
     }
-    // Eau
+
     for (int Ligne = 1; Ligne <= 3; ++Ligne) {
         for (int Colonne = 5; Colonne <= 8; ++Colonne) {
             lvl1.grille[Ligne][Colonne] = config.water;
         }
     }
-    // Montagnes
+
     lvl1.grille[2][12] = config.mountain;
     lvl1.grille[2][13] = config.mountain;
     lvl1.grille[2][14] = config.mountain;
@@ -78,11 +75,9 @@ std::vector<Level> ChargerNiveaux(const Map& config) {
     lvl1.grille[6][16] = config.water;
     lvl1.grille[6][17] = config.water;
 
-    // Positionner la sortie dans la grille
     lvl1.grille[lvl1.exitPos.ligne][lvl1.exitPos.colonne] = config.exit;
     niveaux.push_back(lvl1);
 
-    // --- NIVEAU 2 ---
     Level lvl2;
     lvl2.heroStart = { 0, 0 };
     lvl2.exitPos = { 5, 10 };
@@ -97,7 +92,6 @@ std::vector<Level> ChargerNiveaux(const Map& config) {
             lvl2.grille[Ligne][Colonne] = config.ground;
         }
     }
-    // Murs / Montagnes pour former un couloir
     for (int c = 0; c < 15; ++c) lvl2.grille[4][c] = config.mountain;
     for (int c = 5; c < 20; ++c) lvl2.grille[6][c] = config.mountain;
 
@@ -148,7 +142,7 @@ void AfficherGrille(int grille[10][20], int heroLigne, int heroColonne, const st
     std::system("clear");
 #endif
 
-    std::cout << "--- NIVEAU " << numNiveau + 1 << " ---\n\n";
+    std::cout << "--- Level " << numNiveau + 1 << " ---\n\n";
 
     for (int Ligne = 0; Ligne < 10; ++Ligne) {
         for (int Colonne = 0; Colonne < 20; ++Colonne) {
@@ -200,7 +194,6 @@ bool VerificationCollision(int heroLigne, int heroColonne, const std::vector<Enn
 
 void TraiterGameOver() {
     std::cout << "\n           GAME OVER           \n";
-
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
     while (_kbhit()) {
@@ -229,7 +222,7 @@ int main() {
 
         std::cout << "\nDeplacement (Z-Haut, S-Bas, Q-Gauche, D-Droite, K-Quitter) : " << std::flush;
 
-        char action = static_cast<char>(_getch());
+        char action = (_getch());
         action = static_cast<char>(std::toupper(static_cast<unsigned char>(action)));
 
         int nouvelleLigne = heroLigne;
@@ -269,7 +262,6 @@ int main() {
             }
         }
 
-        // Collision après déplacement du joueur
         if (VerificationCollision(heroLigne, heroColonne, niveauActuel.ennemis, player)) {
             if (player.hp <= 0) {
                 AfficherGrille(niveauActuel.grille, heroLigne, heroColonne, niveauActuel.ennemis, config, indexNiveau);
@@ -279,7 +271,6 @@ int main() {
             }
         }
 
-        // Déplacement des ennemis
         DeplacerEnnemis(niveauActuel.grille, niveauActuel.ennemis, config);
 
         if (VerificationCollision(heroLigne, heroColonne, niveauActuel.ennemis, player)) {
